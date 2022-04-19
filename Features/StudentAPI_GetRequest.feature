@@ -1,6 +1,6 @@
 Feature: GET: Automated Student API Tests
 
-
+  @TestPass
   Scenario Outline: GET: Test the Student API app
     Given I want to set URL as "<URL>" for test case "<TestName>"
     When I set header content type as "<ContentType>"
@@ -12,6 +12,7 @@ Feature: GET: Automated Student API Tests
       | TestGet001 | /getStudentsByCourseId/c_1| application/json |             | GET           |        200 |
 
 
+    @TestFail
   Scenario Outline: GET: Test the Demo app
     Given I want to set URL as "<URL>" for test case "<TestName>"
     When I set header content type as "<ContentType>"
@@ -20,4 +21,4 @@ Feature: GET: Automated Student API Tests
 
     Examples:
       | TestName  | URL               | ContentType      | RequestBody | RequestMethod | StatusCode |
-      | TestGetFail002 | /getStudentsByCourseId/001 | application/json |             | GET           |        200 |
+      | TestGetFail002 | /getStudentsByCourseId/ | application/json |             | GET           |        404 |

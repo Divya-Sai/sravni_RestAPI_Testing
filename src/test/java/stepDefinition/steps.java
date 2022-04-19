@@ -6,6 +6,7 @@ import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.json.simple.JSONObject;
 import org.junit.Assert;
 
 import java.io.FileNotFoundException;
@@ -51,7 +52,7 @@ public class steps {
         if (requestBodyPath != null && !requestBodyPath.isEmpty() && requestType.equalsIgnoreCase("POST")
                 || requestType.equalsIgnoreCase("PUT")) {
             JSONParser jsonParser = new JSONParser();
-            FILE_PATH = System.getProperty("user.dir") + "//src//test//java"
+            FILE_PATH = System.getProperty("user.dir") + "//src//test//java//"
                     + requestBodyPath;
            // logger.info("Path of requestbody file is :: " + FILE_PATH);
             try (FileReader reader = new FileReader(FILE_PATH)) {
@@ -91,6 +92,34 @@ public class steps {
             Assert.assertEquals(STATUS_CODE, statusCode);
         }
     }
+
+    @Then("I try to verify the response value {string} is {string}")
+    public void verifyResponseValue(String responseKey, String value) throws ParseException {
+
+        Object obj = responseKey;
+        JSONParser parser = new JSONParser();
+        JSONObject responseObject = (JSONObject) parser.parse(RESPONSEBODY);
+        Object key = (Object) responseObject.get(responseKey);
+        compareResponseValues(String.valueOf(value), String.valueOf(key), responseKey);
+    }
+
+    private void compareResponseValues(String expected, String actual, String responseKey) {
+      //  Reporter.addStepLog("Actual Value is  ::" + actual);
+      //  Reporter.addStepLog("Expected Value is  ::" + expected);
+        //logger.info("Actual Value is  ::" + actual);
+        //logger.info("Expected Value is  ::" + expected);
+        if (expected.equals(actual)) {
+            Assert.assertEquals(actual, expected);
+           // Reporter.addStepLog(Status.PASS + " " + responseKey + " : Expected value : " + expected
+                  //  + " mathches with Actual Value : " + actual);
+        } else {
+           // Reporter.addStepLog(Status.FAIL + " " + responseKey + " : Expected value : " + expected
+                  //  + " do not matches with Actual Value : " + actual);
+            Assert.assertEquals(actual, expected);
+        }
+    }
+
+
 
 
 
